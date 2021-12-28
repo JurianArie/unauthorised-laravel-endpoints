@@ -2,6 +2,7 @@
 
 namespace JurianArie\UnauthorisedDetection\Tests;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use JurianArie\UnauthorisedDetection\Detector;
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithAuthorizationMiddleware;
@@ -10,6 +11,8 @@ use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithAuthorizingFor
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithGateCall;
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithoutAuthorization;
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithoutAuthorizingFormRequest;
+use JurianArie\UnauthorisedDetection\Tests\Fixtures\Requests\FormRequestWithAuthorize;
+use JurianArie\UnauthorisedDetection\Tests\Fixtures\Requests\FormRequestWithoutAuthorize;
 
 class DetectionTest extends TestCase
 {
@@ -87,9 +90,39 @@ class DetectionTest extends TestCase
 
     public function test_it_passes_closures_with_middleware(): void
     {
-        Route::get('/', fn (): string => '')->can('do-stuff')
+        Route::get('/', fn (): string => '')
+            ->can('do-stuff')
             ->middleware('auth');
 
         $this->assertCount(0, (new Detector())->unauthorizedEndpoints());
+    }
+
+    public function test_it_passes_closures_with_gate(): void
+    {
+        Route::get('/', function (): string {
+            Gate::authorize('do-stuff');
+
+            return '';
+        })->middleware('auth');
+
+        $this->assertCount(0, (new Detector())->unauthorizedEndpoints());
+    }
+
+    public function test_it_passes_closures_with_form_request_that_authorizes(): void
+    {
+        Route::get('/', function (FormRequestWithAuthorize $request): string {
+            return '';
+        })->middleware('auth');
+
+        $this->assertCount(0, (new Detector())->unauthorizedEndpoints());
+    }
+
+    public function test_it_detects_closure_with_form_requests_without_authorization(): void
+    {
+        Route::get('/', function (FormRequestWithoutAuthorize $request): string {
+            return '';
+        })->middleware('auth');
+
+        $this->assertCount(1, (new Detector())->unauthorizedEndpoints());
     }
 }

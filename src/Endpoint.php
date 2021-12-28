@@ -12,6 +12,7 @@ use ReflectionException;
 class Endpoint
 {
     private Route $route;
+    private EndpointReflection $endpointReflection;
 
     public function __construct(Route $route)
     {
@@ -60,22 +61,8 @@ class Endpoint
 
     private function isAuthorizedViaFormRequest(): bool
     {
-        // TODO: handle closures.
-        if ($this->route->getActionMethod() === 'Closure') {
-            return false;
-        }
-
-        $controller = $this->route->getController();
-        $method = $this->route->getActionMethod();
-
-        $this->route->getActionMethod();
-
-        if (get_class($controller) === $method) {
-            $method = '__invoke';
-        }
-
         try {
-            $parameters = (new ReflectionMethod($controller, $method))->getParameters();
+            $parameters = $this->endpointReflection()->getReflection()->getParameters();
 
             foreach ($parameters as $parameter) {
                 $type = $parameter->getType();
@@ -97,21 +84,10 @@ class Endpoint
 
     private function isAuthorizedViaAuthorize(): bool
     {
-        // TODO: handle closures.
-        if ($this->route->getActionMethod() === 'Closure') {
-            return false;
-        }
-
-        $controller = $this->route->getController();
-        $method = $this->route->getActionMethod();
         $authorizingMethods = config('unauthorized-detection.authorization-methods');
 
-        if (get_class($controller) === $method) {
-            $method = '__invoke';
-        }
-
         try {
-            $methodSource = (new ReflectionMethod($controller, $method))->source();
+            $methodSource = $this->endpointReflection()->sourceCode();
 
             foreach ($authorizingMethods as $am) {
                 if (str_contains($methodSource, $am)) {
@@ -123,5 +99,10 @@ class Endpoint
         }
 
         return false;
+    }
+
+    private function endpointReflection(): EndpointReflection
+    {
+        return $this->endpointReflection ??= new EndpointReflection($this->route);
     }
 }
