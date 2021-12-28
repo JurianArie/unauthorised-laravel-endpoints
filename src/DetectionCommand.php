@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace JurianArie\UnauthorisedDetection\Commands;
+namespace JurianArie\UnauthorisedDetection;
 
 use Illuminate\Console\Command;
 use Illuminate\Routing\Route;
-use JurianArie\UnauthorisedDetection\Detector;
 
 class DetectionCommand extends Command
 {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace JurianArie\UnauthorisedDetection;
 
 use Illuminate\Support\ServiceProvider;
-use JurianArie\UnauthorisedDetection\Commands\DetectionCommand;
 
 class UnauthorisedDetectionServiceProvider extends ServiceProvider
 {
