@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JurianArie\UnauthorisedDetection\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Routing\Route;
 use JurianArie\UnauthorisedDetection\Detector;
 
 class DetectionCommand extends Command
@@ -24,7 +25,11 @@ class DetectionCommand extends Command
     {
         $unauthorizedEndpoints = $detector
             ->unauthorizedEndpoints()
-            ->pluck('action.controller');
+            ->map(function (Route $route): string {
+                $action = $route->getAction('controller') ?? $route->getName();
+
+                return is_string($action) ? $action : '';
+            });
 
         if ($unauthorizedEndpoints->isEmpty()) {
             $this->info('No unauthorised endpoints found!');
@@ -34,9 +39,9 @@ class DetectionCommand extends Command
 
         $this->warn('Unauthorised endpoints detected:');
 
-        foreach ($unauthorizedEndpoints as $unauthorizedEndpoint) {
+        $unauthorizedEndpoints->each(function (string $unauthorizedEndpoint): void {
             $this->warn($unauthorizedEndpoint);
-        }
+        });
 
         return self::FAILURE;
     }

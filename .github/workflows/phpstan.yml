@@ -1,0 +1,38 @@
+name: static-analysis
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  php_cs_fixer:
+    runs-on: ubuntu-latest
+    name: PHP
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.0
+          tools: composer:v2
+
+      - name: Setup cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/composer/files
+            ~/.npm
+          key: ${{ runner.os }}-cache-${{ hashFiles('**/composer.lock', '**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-cache-
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+        env:
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+
+      - name: Run static analysis
+        run: ./vendor/bin/phpstan analyse src --level=9 --no-progress

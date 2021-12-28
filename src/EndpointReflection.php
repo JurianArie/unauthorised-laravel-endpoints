@@ -2,7 +2,9 @@
 
 namespace JurianArie\UnauthorisedDetection;
 
+use Closure;
 use Illuminate\Routing\Route;
+use ReflectionException;
 use ReflectionFunction;
 use ReflectionMethod;
 use Reflector;
@@ -28,10 +30,20 @@ class EndpointReflection
         $method = $this->route->getActionMethod();
 
         if ($method === 'Closure') {
-            return new ReflectionFunction($this->route->getAction()['uses']);
+            $closure = $this->route->getAction('uses');
+
+            if (!$closure instanceof Closure) {
+                throw new ReflectionException('Could not create a reflection object for the closure.');
+            }
+
+            return new ReflectionFunction($closure);
         }
 
         $controller = $this->route->getController();
+
+        if (!is_string($controller) && !is_object($controller)) {
+            throw new ReflectionException('Could not create a reflection object for the controller.');
+        }
 
         return new ReflectionMethod($controller, $method);
     }
@@ -49,10 +61,18 @@ class EndpointReflection
 
         $startLine = $reflection->getStartLine();
         $endLine = $reflection->getEndLine();
-        $length = $endLine - $startLine;
+        $fileName = $reflection->getFileName();
 
-        $source = file($reflection->getFileName());
+        if ($fileName === false || $startLine === false || $endLine === false) {
+            return '';
+        }
 
-        return implode('', array_slice($source, $startLine, $length));
+        $source = file($fileName);
+
+        if ($source === false) {
+            return '';
+        }
+
+        return implode('', array_slice($source, $startLine, $endLine - $startLine));
     }
 }

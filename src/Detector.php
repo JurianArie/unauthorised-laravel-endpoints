@@ -13,7 +13,7 @@ class Detector
     /**
      * All the routes that are not authorised.
      *
-     * @return \Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection<int, \Illuminate\Routing\Route>
      */
     public function unauthorizedEndpoints(): Collection
     {

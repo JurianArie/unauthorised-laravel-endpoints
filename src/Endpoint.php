@@ -8,6 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Routing\Route;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionNamedType;
 
 class Endpoint
 {
@@ -41,6 +42,7 @@ class Endpoint
 
     private function shouldBeIgnored(): bool
     {
+        /** @var array<int, string> $ignoredRoutes */
         $ignoredRoutes = config('unauthorized-detection.ignore');
 
         return $ignoredRoutes !== []
@@ -56,6 +58,7 @@ class Endpoint
      */
     private function requiresAuthorization(): bool
     {
+        /** @var array<int, string> $middlewareToCheck */
         $middlewareToCheck = config('unauthorized-detection.authentication-middleware');
 
         foreach ($middlewareToCheck as $middleware) {
@@ -76,6 +79,7 @@ class Endpoint
     private function isAuthorizedViaMiddleware(): bool
     {
         $gatheredMiddleware = $this->route->gatherMiddleware();
+        /** @var array<int, string> $authorizingMiddleware */
         $authorizingMiddleware = config('unauthorized-detection.authorization-middleware');
 
         foreach ($gatheredMiddleware as $middleware) {
@@ -101,7 +105,14 @@ class Endpoint
 
             foreach ($parameters as $parameter) {
                 $type = $parameter->getType();
-                $class = new ReflectionClass($type->getName());
+
+                if (!$type instanceof ReflectionNamedType) {
+                    continue;
+                }
+
+                /** @var class-string $className */
+                $className = $type->getName();
+                $class = new ReflectionClass($className);
 
                 if (
                     $class->isSubclassOf(FormRequest::class)
@@ -125,6 +136,7 @@ class Endpoint
      */
     private function isAuthorizedViaAuthorize(): bool
     {
+        /** @var array<int, string> $authorizingMethods */
         $authorizingMethods = config('unauthorized-detection.authorization-methods');
 
         try {
