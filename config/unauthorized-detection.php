@@ -12,5 +12,6 @@ return [
 
     'authorization-methods' => [
         '$this->authorize(',
+        'Gate::authorize(',
     ],
 ];

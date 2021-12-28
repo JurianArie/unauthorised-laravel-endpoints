@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JurianArie\UnauthorisedDetection\Commands;
 
 use Illuminate\Console\Command;
+use JurianArie\UnauthorisedDetection\Detector;
 
 class DetectionCommand extends Command
 {
@@ -14,8 +15,21 @@ class DetectionCommand extends Command
 
     public function handle(): int
     {
-        $this->comment('All done');
+        $unauthorizedEndpoints = (new Detector())->unauthorizedEndpoints()
+            ->pluck('action.controller');
 
-        return self::SUCCESS;
+        if ($unauthorizedEndpoints->isEmpty()) {
+            $this->info('No unauthorised endpoints found!');
+
+            return self::SUCCESS;
+        }
+
+        $this->warn('Unauthorised endpoints detected:');
+
+        foreach ($unauthorizedEndpoints as $unauthorizedEndpoint) {
+            $this->warn($unauthorizedEndpoint);
+        }
+
+        return self::FAILURE;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JurianArie\UnauthorisedDetection;
 
 use Illuminate\Support\ServiceProvider;
+use JurianArie\UnauthorisedDetection\Commands\DetectionCommand;
 
 class UnauthorisedDetectionServiceProvider extends ServiceProvider
 {
@@ -13,6 +14,10 @@ class UnauthorisedDetectionServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([DetectionCommand::class]);
+        }
+
         $this->publishes([
             __DIR__ . '/../config/unauthorized-detection.php' => config_path('unauthorized-detection.php'),
         ], 'config');

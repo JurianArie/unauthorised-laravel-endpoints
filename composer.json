@@ -13,6 +13,7 @@
         "laravel/framework": "^8.73"
     },
     "require-dev": {
+        "orchestra/testbench": "^6.23",
         "phpunit/phpunit": "^9.5"
     },
     "autoload": {
@@ -22,7 +23,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\UnauthorisedDetection\\Tests\\": "tests"
+            "JurianArie\\UnauthorisedDetection\\Tests\\": "tests"
         }
     },
     "config": {

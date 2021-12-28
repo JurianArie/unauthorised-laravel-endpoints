@@ -6,6 +6,7 @@ namespace JurianArie\UnauthorisedDetection;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Routing\Route;
+use ReflectionClass;
 use ReflectionException;
 
 class Endpoint
@@ -48,7 +49,7 @@ class Endpoint
 
         foreach ($gatheredMiddleware as $middleware) {
             foreach ($authorizingMiddleware as $am) {
-                if (str_starts_with($am, $middleware)) {
+                if (str_starts_with($middleware, $am)) {
                     return true;
                 }
             }
@@ -59,16 +60,31 @@ class Endpoint
 
     private function isAuthorizedViaFormRequest(): bool
     {
+        // TODO: handle closures.
+        if ($this->route->getActionMethod() === 'Closure') {
+            return false;
+        }
+
         $controller = $this->route->getController();
         $method = $this->route->getActionMethod();
+
+        $this->route->getActionMethod();
+
+        if (get_class($controller) === $method) {
+            $method = '__invoke';
+        }
 
         try {
             $parameters = (new ReflectionMethod($controller, $method))->getParameters();
 
             foreach ($parameters as $parameter) {
-                $class = $parameter->getClass();
+                $type = $parameter->getType();
+                $class = new ReflectionClass($type->getName());
 
-                if ($class !== null && $class->isSubclassOf(FormRequest::class)) {
+                if (
+                    $class->isSubclassOf(FormRequest::class)
+                    && $class->hasMethod('authorize')
+                ) {
                     return true;
                 }
             }
@@ -81,9 +97,18 @@ class Endpoint
 
     private function isAuthorizedViaAuthorize(): bool
     {
+        // TODO: handle closures.
+        if ($this->route->getActionMethod() === 'Closure') {
+            return false;
+        }
+
         $controller = $this->route->getController();
         $method = $this->route->getActionMethod();
         $authorizingMethods = config('unauthorized-detection.authorization-methods');
+
+        if (get_class($controller) === $method) {
+            $method = '__invoke';
+        }
 
         try {
             $methodSource = (new ReflectionMethod($controller, $method))->source();
