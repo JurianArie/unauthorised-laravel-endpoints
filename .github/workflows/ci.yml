@@ -1,4 +1,4 @@
-name: static-analysis
+name: ci
 
 on:
   push:
@@ -7,13 +7,14 @@ on:
   pull_request:
 
 jobs:
-  phpstan:
+  ci:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
+        laravel: [ 6.*, 8.* ]
         php: [ 7.4, 8.0 ]
-    name: Static analysis on PHP ${{ matrix.php }}
+    name: Tests on PHP ${{ matrix.php }} using Laravel ${{ matrix.laravel }}
     timeout-minutes: 1
     steps:
       - name: Checkout code
@@ -34,7 +35,12 @@ jobs:
           restore-keys: ${{ runner.os }}-cache-
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
+        run: |
+          composer require --no-update laravel/framework:"${{ matrix.laravel }}"
+          composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run tests
+        run: ./vendor/bin/phpunit
 
       - name: Run static analysis
-        run: ./vendor/bin/phpstan analyse src --level=9 --no-progress
+        run: ./vendor/bin/phpstan analyse --no-progress

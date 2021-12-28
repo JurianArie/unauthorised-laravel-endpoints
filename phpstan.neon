@@ -1,0 +1,9 @@
+parameters:
+	reportUnmatchedIgnoredErrors: false
+	level: 9
+	paths:
+		- src
+
+	ignoreErrors:
+		- '#Call to an undefined method [a-zA-Z0-9\\_]+::getRoutes\(\)#'
+		- '#Call to an undefined static method [a-zA-Z0-9\\_]+::getRoutes\(\)#'

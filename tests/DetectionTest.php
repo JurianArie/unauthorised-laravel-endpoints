@@ -27,8 +27,7 @@ class DetectionTest extends TestCase
     public function test_it_passes_with_route_middleware(): void
     {
         Route::get('/', [ControllerWithoutAuthorization::class, 'index'])
-            ->can('do-stuff')
-            ->middleware('auth');
+            ->middleware(['auth', 'can:do-stuff']);
 
         $this->assertCount(0, (new Detector())->unauthorizedEndpoints());
     }
@@ -91,8 +90,7 @@ class DetectionTest extends TestCase
     public function test_it_passes_closures_with_middleware(): void
     {
         Route::get('/', fn (): string => '')
-            ->can('do-stuff')
-            ->middleware('auth');
+            ->middleware(['auth', 'can:do-stuff']);
 
         $this->assertCount(0, (new Detector())->unauthorizedEndpoints());
     }

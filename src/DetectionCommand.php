@@ -9,6 +9,10 @@ use Illuminate\Routing\Route;
 
 class DetectionCommand extends Command
 {
+    // Here for Laravel 6.x compatibility.
+    public const SUCCESS = 0;
+    public const FAILURE = 1;
+
     public $signature = 'unauthorised-endpoints:detect';
 
     public $description = 'Detect unauthorised endpoints';

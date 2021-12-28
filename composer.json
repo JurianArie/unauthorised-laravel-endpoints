@@ -10,12 +10,12 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "laravel/framework": "^8.73"
+        "laravel/framework": "^6.20.26|^7.29|^8.75"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.23",
+        "orchestra/testbench-core": "^4.8|^6.27",
         "phpstan/phpstan": "^1.2",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^7.5.15|^8.5.19|^9.5.8"
     },
     "autoload": {
         "psr-4": {

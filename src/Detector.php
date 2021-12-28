@@ -17,7 +17,7 @@ class Detector
      */
     public function unauthorizedEndpoints(): Collection
     {
-        return (new Collection (RouteFacade::getRoutes()->getRoutes()))
+        return Collection::make(RouteFacade::getRoutes()->getRoutes())
             ->filter(function (Route $route): bool {
                 $endpoint = new Endpoint($route);
 
