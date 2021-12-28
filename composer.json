@@ -15,7 +15,8 @@
     "require-dev": {
         "orchestra/testbench-core": "^4.8|^6.27",
         "phpstan/phpstan": "^1.2",
-        "phpunit/phpunit": "^7.5.15|^8.5.19|^9.5.8"
+        "phpunit/phpunit": "^7.5.15|^8.5.19|^9.5.8",
+        "squizlabs/php_codesniffer": "^3.6"
     },
     "autoload": {
         "psr-4": {
