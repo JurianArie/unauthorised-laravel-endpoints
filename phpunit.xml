@@ -11,7 +11,7 @@
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
     <coverage>
         <include>
-            <directory suffix=".php">app/</directory>
+            <directory suffix=".php">src/</directory>
         </include>
     </coverage>
     <testsuites>
@@ -19,11 +19,4 @@
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
-    <php>
-        <env name="APP_ENV" value="testing"/>
-        <env name="CACHE_DRIVER" value="array"/>
-        <env name="SESSION_DRIVER" value="array"/>
-        <env name="QUEUE_DRIVER" value="sync"/>
-        <env name="CACHE_DRIVER" value="array"/>
-    </php>
 </phpunit>
