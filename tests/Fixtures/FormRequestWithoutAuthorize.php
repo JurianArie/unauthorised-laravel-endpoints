@@ -1,8 +1,10 @@
 <?php
 
-namespace JurianArie\UnauthorisedDetection\Tests\Fixtures\Requests;
+namespace JurianArie\UnauthorisedDetection\Tests\Fixtures;
 
-class FormRequestWithoutAuthorize extends \Illuminate\Foundation\Http\FormRequest
+use Illuminate\Foundation\Http\FormRequest;
+
+class FormRequestWithoutAuthorize extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

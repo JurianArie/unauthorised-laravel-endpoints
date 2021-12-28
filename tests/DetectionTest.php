@@ -11,8 +11,8 @@ use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithAuthorizingFor
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithGateCall;
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithoutAuthorization;
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithoutAuthorizingFormRequest;
-use JurianArie\UnauthorisedDetection\Tests\Fixtures\Requests\FormRequestWithAuthorize;
-use JurianArie\UnauthorisedDetection\Tests\Fixtures\Requests\FormRequestWithoutAuthorize;
+use JurianArie\UnauthorisedDetection\Tests\Fixtures\FormRequestWithAuthorize;
+use JurianArie\UnauthorisedDetection\Tests\Fixtures\FormRequestWithoutAuthorize;
 
 class DetectionTest extends TestCase
 {

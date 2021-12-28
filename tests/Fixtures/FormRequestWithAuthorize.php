@@ -1,8 +1,10 @@
 <?php
 
-namespace JurianArie\UnauthorisedDetection\Tests\Fixtures\Requests;
+namespace JurianArie\UnauthorisedDetection\Tests\Fixtures;
 
-class FormRequestWithAuthorize extends \Illuminate\Foundation\Http\FormRequest
+use Illuminate\Foundation\Http\FormRequest;
+
+class FormRequestWithAuthorize extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
