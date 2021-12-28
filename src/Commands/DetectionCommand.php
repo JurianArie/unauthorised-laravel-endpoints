@@ -13,9 +13,17 @@ class DetectionCommand extends Command
 
     public $description = 'Detect unauthorised endpoints';
 
-    public function handle(): int
+    /**
+     * Execute the console command.
+     *
+     * @param \JurianArie\UnauthorisedDetection\Detector $detector
+     *
+     * @return int
+     */
+    public function handle(Detector $detector): int
     {
-        $unauthorizedEndpoints = (new Detector())->unauthorizedEndpoints()
+        $unauthorizedEndpoints = $detector
+            ->unauthorizedEndpoints()
             ->pluck('action.controller');
 
         if ($unauthorizedEndpoints->isEmpty()) {
