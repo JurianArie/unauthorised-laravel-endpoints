@@ -1,4 +1,4 @@
-name: static-analysis
+name: tests
 
 on:
   push:
@@ -7,13 +7,13 @@ on:
   pull_request:
 
 jobs:
-  phpstan:
+  tests:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
         php: [ 7.4, 8.0 ]
-    name: Static analysis on PHP ${{ matrix.php }}
+    name: Tests on PHP ${{ matrix.php }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -35,5 +35,5 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
-      - name: Run static analysis
-        run: ./vendor/bin/phpstan analyse src --level=9 --no-progress
+      - name: Run tests
+        run: ./vendor/bin/phpunit
