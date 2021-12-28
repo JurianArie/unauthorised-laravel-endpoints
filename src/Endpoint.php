@@ -19,6 +19,11 @@ class Endpoint
         $this->route = $route;
     }
 
+    /**
+     * Check if the endpoint is authorised.
+     *
+     * @return bool
+     */
     public function isAuthorized(): bool
     {
         if (!$this->requiresAuthorization()) {
@@ -30,6 +35,11 @@ class Endpoint
             || $this->isAuthorizedViaAuthorize();
     }
 
+    /**
+     * Check if the endpoint is behind a login.
+     *
+     * @return bool
+     */
     private function requiresAuthorization(): bool
     {
         $middlewareToCheck = config('unauthorized-detection.authentication-middleware');
@@ -43,6 +53,12 @@ class Endpoint
         return false;
     }
 
+    /**
+     * Check if the endpoint is authorised via middleware.
+     * This could be route or controller middleware.
+     *
+     * @return bool
+     */
     private function isAuthorizedViaMiddleware(): bool
     {
         $gatheredMiddleware = $this->route->gatherMiddleware();
@@ -59,6 +75,11 @@ class Endpoint
         return false;
     }
 
+    /**
+     * Check if the endpoint is authorised via a form request.
+     *
+     * @return bool
+     */
     private function isAuthorizedViaFormRequest(): bool
     {
         try {
@@ -82,6 +103,12 @@ class Endpoint
         }
     }
 
+    /**
+     * Check if the endpoint is authorised authorization methods.
+     * e.g. Controller::authorize() or Gate::authorize().
+     *
+     * @return bool
+     */
     private function isAuthorizedViaAuthorize(): bool
     {
         $authorizingMethods = config('unauthorized-detection.authorization-methods');
@@ -101,6 +128,11 @@ class Endpoint
         return false;
     }
 
+    /**
+     * Get the (cached) reflection of the endpoint.
+     *
+     * @return \JurianArie\UnauthorisedDetection\EndpointReflection
+     */
     private function endpointReflection(): EndpointReflection
     {
         return $this->endpointReflection ??= new EndpointReflection($this->route);

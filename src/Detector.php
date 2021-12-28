@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Route as RouteFacade;
 
 class Detector
 {
+    /**
+     * All the routes that are not authorised.
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function unauthorizedEndpoints(): Collection
     {
         return (new Collection (RouteFacade::getRoutes()->getRoutes()))
