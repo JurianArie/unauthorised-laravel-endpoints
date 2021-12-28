@@ -20,7 +20,7 @@ class UnauthorisedDetectionServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../config/unauthorized-detection.php' => config_path('unauthorized-detection.php'),
-        ], 'config');
+        ], 'unauthorized-detection');
     }
 
     /**
