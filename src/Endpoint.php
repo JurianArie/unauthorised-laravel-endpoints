@@ -26,6 +26,10 @@ class Endpoint
      */
     public function isAuthorized(): bool
     {
+        if ($this->shouldBeIgnored()) {
+            return true;
+        }
+
         if (!$this->requiresAuthorization()) {
             return true;
         }
@@ -33,6 +37,16 @@ class Endpoint
         return $this->isAuthorizedViaMiddleware()
             || $this->isAuthorizedViaFormRequest()
             || $this->isAuthorizedViaAuthorize();
+    }
+
+    private function shouldBeIgnored(): bool
+    {
+        $ignoredRoutes = config('unauthorized-detection.ignore');
+
+        return $ignoredRoutes !== []
+            && (in_array($this->route->getName(), $ignoredRoutes)
+                || in_array($this->route->uri, $ignoredRoutes)
+                || in_array($this->route->getAction('controller'), $ignoredRoutes));
     }
 
     /**

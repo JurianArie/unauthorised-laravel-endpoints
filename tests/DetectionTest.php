@@ -125,4 +125,38 @@ class DetectionTest extends TestCase
 
         $this->assertCount(1, (new Detector())->unauthorizedEndpoints());
     }
+
+    public function test_it_ignores_routes_via_the_name(): void
+    {
+        config()->set('unauthorized-detection.ignore', ['ignore']);
+
+        Route::get('/', fn (): string => '')
+            ->middleware('auth')
+            ->name('ignore');
+
+        $this->assertCount(0, (new Detector())->unauthorizedEndpoints());
+    }
+
+    public function test_it_ignores_routes_via_the_uri(): void
+    {
+        config()->set('unauthorized-detection.ignore', ['/']);
+
+        Route::get('/', fn (): string => '')
+            ->middleware('auth');
+
+        $this->assertCount(0, (new Detector())->unauthorizedEndpoints());
+    }
+
+    public function test_it_ignores_routes_via_the_action(): void
+    {
+        config()->set(
+            'unauthorized-detection.ignore',
+            [ControllerWithoutAuthorization::class . '@index'],
+        );
+
+        Route::get('/', [ControllerWithoutAuthorization::class, 'index'])
+            ->middleware('auth');
+
+        $this->assertCount(0, (new Detector())->unauthorizedEndpoints());
+    }
 }
