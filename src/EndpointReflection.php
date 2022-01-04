@@ -9,6 +9,9 @@ use ReflectionFunction;
 use ReflectionMethod;
 use Reflector;
 
+/**
+ * @internal
+ */
 class EndpointReflection
 {
     /**

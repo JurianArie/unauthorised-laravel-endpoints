@@ -7,7 +7,11 @@ namespace JurianArie\UnauthorisedDetection;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Collection;
+use JurianArie\UnauthorisedDetection\Detectors\DetectsAuthorization;
 
+/**
+ * @internal
+ */
 class Detector
 {
     /**
@@ -38,7 +42,21 @@ class Detector
             ->filter(function (Route $route): bool {
                 $endpoint = new Endpoint($route);
 
-                return !$endpoint->isAuthorized();
+                /** @var array<int, string|class-string> $detectors */
+                $detectors = config('unauthorized-detection.authorization-detectors');
+
+                foreach ($detectors as $detectorClass) {
+                    $detector = app($detectorClass);
+
+                    if (
+                        $detector instanceof DetectsAuthorization
+                        && $detector->isAuthorized($endpoint)
+                    ) {
+                        return false;
+                    }
+                }
+
+                return true;
             });
     }
 }

@@ -29,4 +29,15 @@ return [
      * This can be the name, uri or action of the route.
      */
     'ignore' => [],
+
+    /**
+     * The classes that are used for unauthorized detection.
+     */
+    'authorization-detectors' => [
+        \JurianArie\UnauthorisedDetection\Detectors\DetectsIgnoredEndpoints::class,
+        \JurianArie\UnauthorisedDetection\Detectors\DetectsUnauthenticatedRoutes::class,
+        \JurianArie\UnauthorisedDetection\Detectors\DetectsAuthorizationInMiddleware::class,
+        \JurianArie\UnauthorisedDetection\Detectors\DetectsAuthorizationInFormRequest::class,
+        \JurianArie\UnauthorisedDetection\Detectors\DetectsAuthorizationInSourceCode::class,
+    ],
 ];
