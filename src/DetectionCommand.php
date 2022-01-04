@@ -9,7 +9,10 @@ use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use UnexpectedValueException;
 
-class DetectionCommand extends RouteListCommand
+/**
+ * @internal
+ */
+final class DetectionCommand extends RouteListCommand
 {
     // Here for Laravel 6.x compatibility.
     public const SUCCESS = 0;
