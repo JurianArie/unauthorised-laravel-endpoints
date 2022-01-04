@@ -18,7 +18,7 @@ jobs:
           - laravel: 6.*
             php: 8.1
     name: PHP ${{ matrix.php }} using Laravel ${{ matrix.laravel }}
-    timeout-minutes: 1
+    timeout-minutes: 2
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
