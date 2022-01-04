@@ -11,8 +11,18 @@ use Reflector;
 
 class EndpointReflection
 {
+    /**
+     * The route instance.
+     *
+     * @var \Illuminate\Routing\Route $route
+     */
     private Route $route;
 
+    /**
+     * Create a new EndpointReflection instance.
+     *
+     * @param \Illuminate\Routing\Route $route
+     */
     public function __construct(Route $route)
     {
         $this->route = $route;

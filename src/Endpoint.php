@@ -12,9 +12,25 @@ use ReflectionNamedType;
 
 class Endpoint
 {
+    /**
+     * The route instance.
+     *
+     * @var \Illuminate\Routing\Route $route
+     */
     private Route $route;
+
+    /**
+     * The EndpointReflection instance.
+     *
+     * @var \JurianArie\UnauthorisedDetection\EndpointReflection $endpointReflection
+     */
     private EndpointReflection $endpointReflection;
 
+    /**
+     * Instantiate a new Endpoint.
+     *
+     * @param \Illuminate\Routing\Route $route
+     */
     public function __construct(Route $route)
     {
         $this->route = $route;
