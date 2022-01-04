@@ -26,4 +26,3 @@ final class DetectsIgnoredEndpoints implements DetectsAuthorization
                 || in_array($endpoint->route()->getAction('controller'), $ignoredRoutes));
     }
 }
-
