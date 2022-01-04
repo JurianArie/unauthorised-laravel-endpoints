@@ -13,7 +13,7 @@ jobs:
       fail-fast: true
       matrix:
         laravel: [ 6.*, 8.* ]
-        php: [ 7.4, 8.0 ]
+        php: [ 7.4, 8.0, 8.1 ]
     name: PHP ${{ matrix.php }} using Laravel ${{ matrix.laravel }}
     timeout-minutes: 1
     steps:
