@@ -26,7 +26,7 @@ final class DetectsAuthorizationInSourceCode implements DetectsAuthorization
             $sourceCode = $endpoint->sourceCode();
 
             foreach ($authorizingMethods as $am) {
-                if (str_contains($sourceCode, $am)) {
+                if (preg_match($am, $sourceCode) === 1) {
                     return true;
                 }
             }
