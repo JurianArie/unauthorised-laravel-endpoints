@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace JurianArie\UnauthorisedDetection;
 
+use Closure;
 use Illuminate\Routing\Route;
+use ReflectionException;
+use ReflectionFunction;
+use ReflectionMethod;
+use Reflector;
 
 class Endpoint
 {
@@ -14,13 +19,6 @@ class Endpoint
      * @var \Illuminate\Routing\Route $route
      */
     private Route $route;
-
-    /**
-     * The endpoint reflection instance.
-     *
-     * @var \JurianArie\UnauthorisedDetection\EndpointReflection $endpointReflection
-     */
-    private EndpointReflection $endpointReflection;
 
     /**
      * Instantiate a new Endpoint.
@@ -43,22 +41,72 @@ class Endpoint
     }
 
     /**
-     * Check if the endpoint is authorised.
+     * Get reflection parameters for the endpoint.
      *
-     * @return bool
+     * @return \ReflectionParameter[]
+     *
+     * @throws \ReflectionException
      */
-    public function isAuthorized(): bool
+    public function reflectionParameters(): array
     {
-        return false;
+        return $this->reflector()->getParameters();
     }
 
     /**
-     * Get the (cached) reflection of the endpoint.
+     * Get the source code of the endpoint.
      *
-     * @return \JurianArie\UnauthorisedDetection\EndpointReflection
+     * @return string
+     *
+     * @throws \ReflectionException
      */
-    public function endpointReflection(): EndpointReflection
+    public function sourceCode(): string
     {
-        return $this->endpointReflection ??= new EndpointReflection($this->route);
+        $reflection = $this->reflector();
+
+        $startLine = $reflection->getStartLine();
+        $endLine = $reflection->getEndLine();
+        $fileName = $reflection->getFileName();
+
+        if ($fileName === false || $startLine === false || $endLine === false) {
+            return '';
+        }
+
+        $source = file($fileName);
+
+        if ($source === false) {
+            return '';
+        }
+
+        return implode('', array_slice($source, $startLine, $endLine - $startLine));
+    }
+
+    /**
+     * Instantiate a reflection object for the endpoint.
+     *
+     * @return \ReflectionMethod|\ReflectionFunction
+     *
+     * @throws \ReflectionException
+     */
+    private function reflector(): Reflector
+    {
+        $method = $this->route->getActionMethod();
+
+        if ($method === 'Closure') {
+            $closure = $this->route->getAction('uses');
+
+            if (!$closure instanceof Closure) {
+                throw new ReflectionException('Could not create a reflection object for the closure.');
+            }
+
+            return new ReflectionFunction($closure);
+        }
+
+        $controller = $this->route->getController();
+
+        if (!is_string($controller) && !is_object($controller)) {
+            throw new ReflectionException('Could not create a reflection object for the controller.');
+        }
+
+        return new ReflectionMethod($controller, $method);
     }
 }

@@ -23,10 +23,10 @@ final class DetectsAuthorizationInSourceCode implements DetectsAuthorization
         $authorizingMethods = config('unauthorized-detection.authorization-methods');
 
         try {
-            $methodSource = $endpoint->endpointReflection()->sourceCode();
+            $sourceCode = $endpoint->sourceCode();
 
             foreach ($authorizingMethods as $am) {
-                if (str_contains($methodSource, $am)) {
+                if (str_contains($sourceCode, $am)) {
                     return true;
                 }
             }

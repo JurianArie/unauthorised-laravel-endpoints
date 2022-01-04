@@ -22,7 +22,7 @@ final class DetectsAuthorizationInFormRequest implements DetectsAuthorization
     public function isAuthorized(Endpoint $endpoint): bool
     {
         try {
-            $parameters = $endpoint->endpointReflection()->getReflection()->getParameters();
+            $parameters = $endpoint->reflectionParameters();
 
             foreach ($parameters as $parameter) {
                 $type = $parameter->getType();
