@@ -13,6 +13,7 @@ use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithoutAuthorizati
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithoutAuthorizingFormRequest;
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\FormRequestWithAuthorize;
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\FormRequestWithoutAuthorize;
+use JurianArie\UnauthorisedDetection\Tests\Fixtures\SingleActionControllerWithAuthorizeCall;
 
 class DetectionTest extends TestCase
 {
@@ -51,6 +52,13 @@ class DetectionTest extends TestCase
     {
         Route::get('/', [ControllerWithGateCall::class, 'index'])
             ->middleware('auth');
+
+        $this->assertCount(0, app(Detector::class)->unauthorizedEndpoints());
+    }
+
+    public function test_it_passes_single_action_controllers_with_authorize_call(): void
+    {
+        Route::get('/', SingleActionControllerWithAuthorizeCall::class)->middleware('auth');
 
         $this->assertCount(0, app(Detector::class)->unauthorizedEndpoints());
     }

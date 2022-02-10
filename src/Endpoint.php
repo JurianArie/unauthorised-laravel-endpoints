@@ -107,6 +107,14 @@ class Endpoint
             throw new ReflectionException('Could not create a reflection object for the controller.');
         }
 
+        $controllerClassName = is_object($controller)
+            ? get_class($controller)
+            : $controller;
+
+        if ($controllerClassName === $method) {
+            $method = '__invoke';
+        }
+
         return new ReflectionMethod($controller, $method);
     }
 }
