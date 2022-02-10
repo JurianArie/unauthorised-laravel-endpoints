@@ -9,7 +9,7 @@ Forgetting authorization is a common mistake. This package helps you to detect t
 You can install the package via composer:
 
 ```bash
-composer require jurianarie/unauthorised-laravel-endpoints
+composer require jurianarie/unauthorised-laravel-endpoints --dev
 ```
 
 You can publish the config file with:
