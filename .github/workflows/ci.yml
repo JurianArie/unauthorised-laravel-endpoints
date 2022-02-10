@@ -12,11 +12,13 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        laravel: [ 6.*, 8.* ]
+        laravel: [ 6.*, 8.*, 9.* ]
         php: [ 7.4, 8.0, 8.1 ]
         exclude:
           - laravel: 6.*
             php: 8.1
+          - laravel: 9.*
+            php: 7.4
     name: PHP ${{ matrix.php }} using Laravel ${{ matrix.laravel }}
     timeout-minutes: 2
     steps:
