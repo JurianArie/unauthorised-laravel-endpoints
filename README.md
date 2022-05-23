@@ -24,8 +24,50 @@ php artisan vendor:publish --tag="unauthorized-detection"
 php artisan unauthorised-endpoints:detect
 ```
 
-## Ignoring routes
+## Configuration
+
+### Specify authentication middleware
+By default, any middleware that starts with auth will be used.
+```php
+'authentication-middleware' => [
+    'auth:api', // Only check api.
+],
+```
+
+### Specify authorization middleware
+```php
+'authorization-middleware' => [
+    'your-custom-middleware',
+],
+```
+
+### Specify authorization methods
+You can add regular expressions.
+```php
+'authorization-methods' => [
+    '/\$this->authorize\(\'(.*)\\)/',
+    '/Gate::authorize\(\'(.*)\\)/',
+],
+```
+
+### Ignoring routes
 You can ignore routes by adding the name, uri or action of the route to the `ignore` array in the config file.
+
+```php
+'ignore' => [
+    'users/me', //Ignore uri
+    'users.me', //Ignore route
+    UserController::class . '@me', //Ignore action
+    UserController::class, //Ignore invokable controller
+],
+```
+
+## Adding custom detection
+You can add custom detection classes if you have more advanced requirements.
+
+First implement a class that implements the `\JurianArie\UnauthorisedDetection\Detectors\DetectsAuthorization`.
+
+Next add the class to the `'authorization-detectors'` array in the config file.
 
 ## License
 
