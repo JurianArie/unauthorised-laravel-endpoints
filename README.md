@@ -24,6 +24,9 @@ php artisan vendor:publish --tag="unauthorized-detection"
 php artisan unauthorised-endpoints:detect
 ```
 
+
+> Tip: the same arguments are available as with [route:list](https://laravel.com/docs/9.x/routing#the-route-list)
+
 ## Configuration
 
 ### Specify authentication middleware
