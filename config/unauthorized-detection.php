@@ -28,7 +28,10 @@ return [
      * Any route that you want to be excluded from unauthorized detection.
      * This can be the name, uri or action of the route.
      */
-    'ignore' => [],
+    'ignore' => [
+        '\Illuminate\Routing\RedirectController',
+        '\Illuminate\Routing\ViewController',
+    ],
 
     /**
      * The classes that are used for unauthorized detection.
