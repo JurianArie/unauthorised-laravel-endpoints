@@ -18,10 +18,25 @@ You can publish the config file with:
 php artisan vendor:publish --tag="unauthorized-detection"
 ```
 
+## How it works
+This package looks through all routes defined in your application and tries to find authorization checks.
+
+There are a few build in checks:
+
+* Authorization via middleware
+* Authorization via FormRequests
+* Authorization via source code (This has some [limitations](#known-limitations).)
+
 ## Usage
 
 ```bash
 php artisan unauthorised-endpoints:detect
+```
+
+Or exclude vendor routes:
+
+```bash
+php artisan unauthorised-endpoints:detect --except-vendor
 ```
 
 
@@ -55,10 +70,11 @@ You can add regular expressions.
 
 ### Ignoring routes
 You can ignore routes using `Request::is()`, `Request::routeIs()` https://laravel.com/docs/9.x/requests#inspecting-the-request-path.
+
 Additionally, you can ignore route actions. For example:
 ```php
 'ignore' => [
-    '\App\Http\Controllers\ExampleController@index',
+    '\App\Http\Controllers\ExampleController@show',
     '\App\Http\Controllers\InvokableController',
 ],
 ```
@@ -69,6 +85,14 @@ You can add custom detection classes if you have more advanced requirements.
 First implement a class that implements the `\JurianArie\UnauthorisedDetection\Detectors\DetectsAuthorization`.
 
 Next add the class to the `'authorization-detectors'` array in the config file.
+
+
+## Known limitations
+You might get false positives if your authorization has to be detected in your source code.
+
+* Your action doesn't have any source code.
+* Your authorization happens further down in the call stack.
+* Your authorization uses structures such as `abort_if($user->cannot(...)`, `if ($user->cannot(...)) {...}`
 
 ## License
 
