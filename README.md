@@ -30,7 +30,7 @@ php artisan unauthorised-endpoints:detect
 ## Configuration
 
 ### Specify authentication middleware
-By default, any middleware that starts with auth will be used.
+By default, any middleware that starts with auth will be used. **Routes that don't require authentication will be ignored.**
 ```php
 'authentication-middleware' => [
     'auth:api', // Only check api.
@@ -54,14 +54,12 @@ You can add regular expressions.
 ```
 
 ### Ignoring routes
-You can ignore routes by adding the name, uri or action of the route to the `ignore` array in the config file.
-
+You can ignore routes using `Request::is()`, `Request::routeIs()` https://laravel.com/docs/9.x/requests#inspecting-the-request-path.
+Additionally, you can ignore route actions. For example:
 ```php
 'ignore' => [
-    'users/me', //Ignore uri
-    'users.me', //Ignore route
-    UserController::class . '@me', //Ignore action
-    UserController::class, //Ignore invokable controller
+    '\App\Http\Controllers\ExampleController@index',
+    '\App\Http\Controllers\InvokableController',
 ],
 ```
 

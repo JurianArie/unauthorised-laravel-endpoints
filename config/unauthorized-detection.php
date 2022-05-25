@@ -25,8 +25,7 @@ return [
     ],
 
     /**
-     * Any route that you want to be excluded from unauthorized detection.
-     * This can be the name, uri or action of the route.
+     * Ignore any route using Request::is(), Request::routeIs() and route actions.
      */
     'ignore' => [
         '\Illuminate\Routing\RedirectController',

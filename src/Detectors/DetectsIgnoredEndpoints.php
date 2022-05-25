@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace JurianArie\UnauthorisedDetection\Detectors;
 
+use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use JurianArie\UnauthorisedDetection\Endpoint;
 
 final class DetectsIgnoredEndpoints implements DetectsAuthorization
@@ -17,12 +19,24 @@ final class DetectsIgnoredEndpoints implements DetectsAuthorization
      */
     public function isAuthorized(Endpoint $endpoint): bool
     {
-        /** @var array<int, string> $ignoredRoutes */
-        $ignoredRoutes = config('unauthorized-detection.ignore');
+        /** @var array<int, string> $ignoredEndpoints */
+        $ignoredEndpoints = config('unauthorized-detection.ignore');
 
-        return $ignoredRoutes !== []
-            && (in_array($endpoint->route()->getName(), $ignoredRoutes)
-                || in_array($endpoint->route()->uri, $ignoredRoutes)
-                || in_array($endpoint->route()->getAction('controller'), $ignoredRoutes));
+        $request = Request::create($endpoint->route()->uri);
+        $request->setRouteResolver(fn (): Route => $endpoint->route()->bind($request));
+
+        $action = $endpoint->route()->getAction('controller');
+
+        foreach ($ignoredEndpoints as $ignoredEndpoint) {
+            if (
+                $request->is($ignoredEndpoint)
+                || $request->routeIs($ignoredEndpoint)
+                || $action === $ignoredEndpoint
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
