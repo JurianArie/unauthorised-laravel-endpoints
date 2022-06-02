@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/JurianArie/unauthorised-laravel-endpoints/actions/workflows/ci.yml/badge.svg)](https://github.com/JurianArie/unauthorised-laravel-endpoints/actions/workflows/ci.yml)
 
-Forgetting authorization is a common mistake. This package helps you to detect those mistakes.
+It's easy to forget authorization. This package is here to help you out!
 
 ## Installation
 
@@ -25,7 +25,7 @@ There are a few build in checks:
 
 * Authorization via middleware
 * Authorization via FormRequests
-* Authorization via source code (This has some [limitations](#known-limitations).)
+* Authorization via source code (This has some [limitations](#limitations).)
 
 ## Usage
 
@@ -45,7 +45,7 @@ php artisan unauthorised-endpoints:detect --except-vendor
 ## Configuration
 
 ### Specify authentication middleware
-By default, any middleware that starts with auth will be used. **Routes that don't require authentication will be ignored.**
+By default, only the `auth` middleware is checked. **Routes without the specified middleware will be ignored.**
 ```php
 'authentication-middleware' => [
     'auth:api', // Only check api.
@@ -53,6 +53,7 @@ By default, any middleware that starts with auth will be used. **Routes that don
 ```
 
 ### Specify authorization middleware
+Here you can specify the middleware that is used to authorize the routes.
 ```php
 'authorization-middleware' => [
     'your-custom-middleware',
@@ -69,25 +70,12 @@ You can add regular expressions.
 ```
 
 ### Ignoring routes
-You can ignore routes using `Request::is()`, `Request::routeIs()` https://laravel.com/docs/9.x/requests#inspecting-the-request-path.
-
-Additionally, you can ignore route actions. For example:
-```php
-'ignore' => [
-    '\App\Http\Controllers\ExampleController@show',
-    '\App\Http\Controllers\InvokableController',
-],
-```
+You can ignore routes the same way as with `Request::is()` and `Request::routeIs()` https://laravel.com/docs/9.x/requests#inspecting-the-request-path.
 
 ## Adding custom detection
-You can add custom detection classes if you have more advanced requirements.
+You can add custom detection by adding a class that implements `\JurianArie\UnauthorisedDetection\Detectors\DetectsAuthorization` to the `'authorization-detectors'` array in your config.
 
-First implement a class that implements the `\JurianArie\UnauthorisedDetection\Detectors\DetectsAuthorization`.
-
-Next add the class to the `'authorization-detectors'` array in the config file.
-
-
-## Known limitations
+## Limitations
 You might get false positives if your authorization has to be detected in your source code.
 
 * Your action doesn't have any source code.

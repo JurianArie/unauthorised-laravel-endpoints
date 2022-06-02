@@ -25,7 +25,7 @@ return [
     ],
 
     /**
-     * Ignore any route using Request::is(), Request::routeIs() and route actions.
+     * Ignore routes by detecting them using Request::is() and Request::routeIs().
      */
     'ignore' => [
         '\Illuminate\Routing\RedirectController',

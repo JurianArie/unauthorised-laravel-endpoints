@@ -25,14 +25,8 @@ final class DetectsIgnoredEndpoints implements DetectsAuthorization
         $request = Request::create($endpoint->route()->uri);
         $request->setRouteResolver(fn (): Route => $endpoint->route()->bind($request));
 
-        $action = $endpoint->route()->getAction('controller');
-
         foreach ($ignoredEndpoints as $ignoredEndpoint) {
-            if (
-                $request->is($ignoredEndpoint)
-                || $request->routeIs($ignoredEndpoint)
-                || $action === $ignoredEndpoint
-            ) {
+            if ($request->is($ignoredEndpoint) || $request->routeIs($ignoredEndpoint)) {
                 return true;
             }
         }
