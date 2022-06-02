@@ -153,19 +153,6 @@ class DetectionTest extends TestCase
         $this->assertCount(0, app(Detector::class)->unauthorizedEndpoints());
     }
 
-    public function test_it_ignores_routes_via_the_action(): void
-    {
-        config()->set(
-            'unauthorized-detection.ignore',
-            [ControllerWithoutAuthorization::class . '@index'],
-        );
-
-        Route::get('/', [ControllerWithoutAuthorization::class, 'index'])
-            ->middleware('auth');
-
-        $this->assertCount(0, app(Detector::class)->unauthorizedEndpoints());
-    }
-
     public function test_it_ignores_redirect_routes(): void
     {
         Route::redirect('/', '/')->middleware('auth');
