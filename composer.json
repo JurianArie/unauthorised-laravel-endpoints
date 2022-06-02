@@ -1,0 +1,43 @@
+{
+    "name": "jurianarie/unauthorised-laravel-endpoints",
+    "description": "Detect unauthorised endpoints in your Laravel application",
+    "homepage": "https://github.com/JurianArie/unauthorised-laravel-endpoints",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "JurianArie"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0.2",
+        "laravel/framework": "^6.20.26|^7.29|^8.75|^9.0"
+    },
+    "require-dev": {
+        "orchestra/testbench-core": "^4.8|^6.27",
+        "phpstan/phpstan": "^1.2",
+        "phpunit/phpunit": "^7.5.15|^8.5.19|^9.5.8",
+        "squizlabs/php_codesniffer": "^3.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "JurianArie\\UnauthorisedDetection\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "JurianArie\\UnauthorisedDetection\\Tests\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "JurianArie\\UnauthorisedDetection\\UnauthorisedDetectionServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

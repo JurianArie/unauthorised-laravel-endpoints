@@ -1,0 +1,54 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        laravel: [ 6.*, 8.*, 9.* ]
+        php: [ 7.4, 8.0, 8.1 ]
+        exclude:
+          - laravel: 6.*
+            php: 8.1
+          - laravel: 9.*
+            php: 7.4
+    name: PHP ${{ matrix.php }} using Laravel ${{ matrix.laravel }}
+    timeout-minutes: 2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2, cs2pr
+
+      - name: Setup cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/composer/files
+          key: ${{ runner.os }}-cache-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-cache-
+
+      - name: Install Composer dependencies
+        run: |
+          composer require --no-update laravel/framework:"${{ matrix.laravel }}"
+          composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run tests
+        run: ./vendor/bin/phpunit
+
+      - name: Run static analysis
+        run: ./vendor/bin/phpstan analyse --no-progress
+
+      - name: Run PHP_CodeSniffer
+        run: ./vendor/bin/phpcs --report=checkstyle -q | cs2pr --graceful-warnings

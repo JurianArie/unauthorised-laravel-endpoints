@@ -1,0 +1,8 @@
+parameters:
+    reportUnmatchedIgnoredErrors: false
+    level: max
+    paths:
+        - src
+
+    ignoreErrors:
+        - '#Anonymous function never returns null so it can be removed from the return type.#'
