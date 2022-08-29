@@ -6,8 +6,10 @@ namespace JurianArie\UnauthorisedDetection;
 
 use Closure;
 use Illuminate\Routing\Route;
+use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
+use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use Reflector;
 
@@ -61,7 +63,23 @@ class Endpoint
      */
     public function sourceCode(): string
     {
-        $reflection = $this->reflector();
+        return $this->sourceCodeOf($this->reflector());
+    }
+
+    /**
+     * Get the source code of the reflector.
+     *
+     * @param \Reflector $reflection
+     * @return string
+     */
+    public function sourceCodeOf(Reflector $reflection): string
+    {
+        if (
+            !$reflection instanceof ReflectionFunctionAbstract
+            && ! $reflection instanceof ReflectionClass
+        ) {
+            return '';
+        }
 
         $startLine = $reflection->getStartLine();
         $endLine = $reflection->getEndLine();

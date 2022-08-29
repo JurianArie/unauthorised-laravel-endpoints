@@ -4,7 +4,7 @@ namespace JurianArie\UnauthorisedDetection\Tests\Fixtures;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FormRequestWithAuthorize extends FormRequest
+class FormRequestWithAuthorizeButNotReally extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class FormRequestWithAuthorize extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('do-stuff');
+        return true;
     }
 
     /**

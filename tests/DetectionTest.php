@@ -12,6 +12,7 @@ use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithGateCall;
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithoutAuthorization;
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\ControllerWithoutAuthorizingFormRequest;
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\FormRequestWithAuthorize;
+use JurianArie\UnauthorisedDetection\Tests\Fixtures\FormRequestWithAuthorizeButNotReally;
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\FormRequestWithoutAuthorize;
 use JurianArie\UnauthorisedDetection\Tests\Fixtures\SingleActionControllerWithAuthorizeCall;
 
@@ -121,6 +122,15 @@ class DetectionTest extends TestCase
         })->middleware('auth');
 
         $this->assertCount(0, app(Detector::class)->unauthorizedEndpoints());
+    }
+
+    public function test_it_detects_closures_with_form_request_that_authorizes_but_not_really(): void
+    {
+        Route::get('/', function (FormRequestWithAuthorizeButNotReally $request): string {
+            return '';
+        })->middleware('auth');
+
+        $this->assertCount(1, app(Detector::class)->unauthorizedEndpoints());
     }
 
     public function test_it_detects_closure_with_form_requests_without_authorization(): void

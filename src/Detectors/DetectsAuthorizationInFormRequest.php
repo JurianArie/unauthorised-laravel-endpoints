@@ -33,11 +33,12 @@ final class DetectsAuthorizationInFormRequest implements DetectsAuthorization
 
                 /** @var class-string $className */
                 $className = $type->getName();
-                $class = new ReflectionClass($className);
+                $formRequest = new ReflectionClass($className);
 
                 if (
-                    $class->isSubclassOf(FormRequest::class)
-                    && $class->hasMethod('authorize')
+                    $formRequest->isSubclassOf(FormRequest::class)
+                    && $formRequest->hasMethod('authorize')
+                    && $this->authorizeDoesntDirectlyReturnsTrue($endpoint, $formRequest)
                 ) {
                     return true;
                 }
@@ -47,5 +48,23 @@ final class DetectsAuthorizationInFormRequest implements DetectsAuthorization
         } catch (ReflectionException $e) {
             return false;
         }
+    }
+
+    /**
+     * Checks if the authorize method of the form request doesn't directly return true.
+     *
+     * @param \JurianArie\UnauthorisedDetection\Endpoint $endpoint
+     * @param \ReflectionClass<\Illuminate\Foundation\Http\FormRequest> $formRequest
+     * @return bool
+     * @throws \ReflectionException
+     */
+    private function authorizeDoesntDirectlyReturnsTrue(Endpoint $endpoint, ReflectionClass $formRequest): bool
+    {
+        $sourceCode = $endpoint->sourceCodeOf($formRequest);
+
+        return preg_match(
+            '/public function authorize\(\).*\n    \{\n        return true\;\n    \}/',
+            $sourceCode
+        ) === 0;
     }
 }
