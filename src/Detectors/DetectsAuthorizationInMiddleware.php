@@ -24,7 +24,7 @@ final class DetectsAuthorizationInMiddleware implements DetectsAuthorization
 
         foreach ($gatheredMiddleware as $middleware) {
             foreach ($authorizingMiddleware as $am) {
-                if (str_starts_with($middleware, $am)) {
+                if (is_string($middleware) && str_starts_with($middleware, $am)) {
                     return true;
                 }
             }
