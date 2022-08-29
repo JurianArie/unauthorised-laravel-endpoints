@@ -101,11 +101,11 @@ class Endpoint
     /**
      * Instantiate a reflection object for the endpoint.
      *
-     * @return \ReflectionMethod|\ReflectionFunction
+     * @return \ReflectionFunctionAbstract
      *
      * @throws \ReflectionException
      */
-    private function reflector(): Reflector
+    public function reflector(): Reflector
     {
         $method = $this->route->getActionMethod();
 
