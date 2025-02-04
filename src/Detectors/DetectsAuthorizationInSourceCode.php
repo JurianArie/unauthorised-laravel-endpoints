@@ -31,7 +31,7 @@ final class DetectsAuthorizationInSourceCode implements DetectsAuthorization
                 }
             }
         } catch (ReflectionException $e) {
-            return false;
+            return true;
         }
 
         return false;
