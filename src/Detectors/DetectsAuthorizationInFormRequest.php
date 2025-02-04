@@ -46,7 +46,7 @@ final class DetectsAuthorizationInFormRequest implements DetectsAuthorization
 
             return false;
         } catch (ReflectionException $e) {
-            return false;
+            return true;
         }
     }
 
