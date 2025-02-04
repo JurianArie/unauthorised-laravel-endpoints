@@ -29,6 +29,16 @@ final class DetectsIgnoredEndpoints implements DetectsAuthorization
             if ($request->is($ignoredEndpoint) || $request->routeIs($ignoredEndpoint)) {
                 return true;
             }
+
+            $route = $request->route();
+
+            if (
+                $route instanceof Route
+                && isset($route->action['controller'])
+                && $route->action['controller'] === $ignoredEndpoint
+            ) {
+                return true;
+            }
         }
 
         return false;

@@ -163,6 +163,16 @@ class DetectionTest extends TestCase
         $this->assertCount(0, app(Detector::class)->unauthorizedEndpoints());
     }
 
+    public function test_it_ignores_redirect_routes(): void
+    {
+        config()->set('unauthorized-detection.ignore', ['\Illuminate\Routing\RedirectController']);
+
+        Route::redirect('/', 'temp')
+            ->middleware('auth');
+
+        $this->assertCount(0, app(Detector::class)->unauthorizedEndpoints());
+    }
+
     public function test_it_includes_broken_routes(): void
     {
         Route::get('/', [ControllerWithoutAuthorization::class, 'brokenRoute'])
