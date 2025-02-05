@@ -20,8 +20,9 @@ return [
      * Any method that can be used for authorization.
      */
     'authorization-methods' => [
-        '/\$this->authorize\(\'(.*)\\)/',
-        '/Gate::authorize\(\'(.*)\\)/',
+        '/\$this->authorize\(\'(.*)/',
+        '/Gate::authorize\(\'(.*)/',
+        '/Gate::allowIf\(\'(.*)/',
     ],
 
     /**
