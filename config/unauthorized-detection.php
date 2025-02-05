@@ -22,7 +22,7 @@ return [
     'authorization-methods' => [
         '/\$this->authorize\(\'(.*)/',
         '/Gate::authorize\(\'(.*)/',
-        '/Gate::allowIf\(\'(.*)/',
+        '/Gate::allowIf\((.*)/',
     ],
 
     /**
